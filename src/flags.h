@@ -37,6 +37,8 @@ class Flag {
  public:
   using value_t = std::unique_ptr<Value>;
 
+  Flag() = default;
+
   Flag(const std::string& name, value_t value);
 
   Flag(const std::string& name, value_t value, const std::string& description);
