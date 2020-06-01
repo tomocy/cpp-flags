@@ -44,6 +44,8 @@ std::string Flag::Usage() const noexcept {
   return usage;
 }
 
+const std::string& Flag::Name() const noexcept { return name; }
+
 const std::string& Flag::ValidateName(const std::string& name) const {
   if (name.empty()) {
     throw Exception("name should not be empty");

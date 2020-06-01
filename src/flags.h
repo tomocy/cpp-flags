@@ -43,6 +43,8 @@ class Flag {
 
   std::string Usage() const noexcept;
 
+  const std::string& Name() const noexcept;
+
  private:
   const std::string& ValidateName(const std::string& name) const;
   value_t ValidateValue(value_t&& value) const;
