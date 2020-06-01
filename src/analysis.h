@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace flags::analysis {
-enum class TokenKind { END_OF_FILE, UNKNOWN, SHORT_FLAG, LONG_FLAG };
+enum class TokenKind { END_OF_FILE, UNKNOWN, SHORT_FLAG, LONG_FLAG, STRING };
 }
 
 namespace flags::analysis {
@@ -47,11 +47,17 @@ class Lexer {
 
   Token ComposeTokenAs(int n, TokenKind kind) noexcept;
 
+  Token ComposeString() noexcept;
+
+  std::string ReadLetters() noexcept;
+
   bool DoHaveWhitespace() const noexcept;
 
   bool DoHaveShortFlag() const noexcept;
 
   bool DoHaveLongFlag() const noexcept;
+
+  bool DoHaveLetter() const noexcept;
 
   bool DoHave(char c) const noexcept;
 

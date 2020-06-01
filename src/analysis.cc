@@ -31,6 +31,10 @@ Token Lexer::ReadToken() noexcept {
     return ComposeDualTokenAs(TokenKind::LONG_FLAG);
   }
 
+  if (DoHaveLetter()) {
+    return ComposeString();
+  }
+
   return ComposeSingleTokenAs(TokenKind::UNKNOWN);
 }
 
@@ -68,6 +72,21 @@ Token Lexer::ComposeTokenAs(int n, TokenKind kind) noexcept {
   return Token(kind, literal);
 }
 
+Token Lexer::ComposeString() noexcept {
+  auto literal = ReadLetters();
+  return Token(TokenKind::STRING, literal);
+}
+
+std::string Lexer::ReadLetters() noexcept {
+  auto begin = index;
+
+  while (DoHaveLetter()) {
+    ReadChar();
+  }
+
+  return std::string(std::begin(src) + begin, std::begin(src) + index);
+}
+
 void Lexer::SkipWhitespaces() noexcept {
   while (DoHaveWhitespace()) {
     ReadChar();
@@ -84,6 +103,12 @@ bool Lexer::DoHaveShortFlag() const noexcept {
 
 bool Lexer::DoHaveLongFlag() const noexcept {
   return DoHave('-') && WillHave('-');
+}
+
+bool Lexer::DoHaveLetter() const noexcept {
+  auto curr = CurrentChar();
+  return ('0' <= curr && curr <= '9') || ('a' <= curr && curr <= 'z') ||
+         ('A' <= curr && curr <= 'Z');
 }
 
 bool Lexer::DoHave(char c) const noexcept { return CurrentChar() == c; }

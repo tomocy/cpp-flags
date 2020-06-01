@@ -9,10 +9,10 @@
 TEST(LexerReadToken, ReadToken) {
   using namespace flags::analysis;
 
-  auto src = std::string("- --");
+  auto src = std::string("-a --b");
   auto expected = std::vector<Token>{
-      kTokenShortFlag,
-      kTokenLongFlag,
+      kTokenShortFlag, Token(TokenKind::STRING, "a"),
+      kTokenLongFlag,  Token(TokenKind::STRING, "b"),
       kTokenEOF,
   };
 
