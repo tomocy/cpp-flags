@@ -33,8 +33,15 @@ Flag::Flag(const std::string& name, value_t value,
       description(ValidateDescription(description)) {}
 
 std::string Flag::Usage() const noexcept {
-  return "--" + name + " " + value->Type() + "  " + description +
-         " (default: " + value->ToString() + ")";
+  auto usage = "--" + name + " " + value->Type() + "  ";
+
+  if (!description.empty()) {
+    usage += description + " ";
+  }
+
+  usage += "(default: " + value->ToString() + ")";
+
+  return usage;
 }
 
 const std::string& Flag::ValidateName(const std::string& name) const {
