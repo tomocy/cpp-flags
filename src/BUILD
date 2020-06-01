@@ -16,4 +16,7 @@ cc_library(
     name = "analysis",
     srcs = ["analysis.cc"],
     hdrs = ["analysis.h"],
+    visibility = [
+        "//tests:__pkg__",
+    ],
 )
