@@ -7,4 +7,13 @@ cc_library(
     visibility = [
         "//tests:__pkg__",
     ],
+    deps = [
+        "//src:analysis",
+    ],
+)
+
+cc_library(
+    name = "analysis",
+    srcs = ["analysis.cc"],
+    hdrs = ["analysis.h"],
 )
