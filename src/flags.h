@@ -33,10 +33,11 @@ class String : public Value {
 namespace flags {
 class Flag {
  public:
-  Flag(const std::string& name, std::unique_ptr<Value> value);
+  using value_t = std::unique_ptr<Value>;
 
-  Flag(const std::string& name, std::unique_ptr<Value> value,
-       const std::string& description);
+  Flag(const std::string& name, value_t value);
+
+  Flag(const std::string& name, value_t value, const std::string& description);
 
   std::string Usage() const noexcept;
 
@@ -45,7 +46,7 @@ class Flag {
   const std::string& ValidateDescription(const std::string& description) const;
 
   std::string name;
-  std::unique_ptr<Value> value;
+  value_t value;
   std::string description;
 };
 }  // namespace flags
