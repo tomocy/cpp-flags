@@ -1,15 +1,18 @@
 #include "src/analysis.h"
 
+#include <iostream>
 #include <string>
 #include <vector>
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
-TEST(ReadToken, Empty) {
+TEST(LexerReadToken, ReadToken) {
   using namespace flags::analysis;
 
-  auto src = std::string("");
+  auto src = std::string("- --");
   auto expected = std::vector<Token>{
+      kTokenShortFlag,
+      kTokenLongFlag,
       kTokenEOF,
   };
 
@@ -17,7 +20,10 @@ TEST(ReadToken, Empty) {
 
   for (auto expected : expected) {
     auto actual = lex.ReadToken();
-    EXPECT_EQ(actual.Kind(), expected.Kind());
-    EXPECT_EQ(actual.Literal(), expected.Literal());
+
+    std::cout << actual.Literal() << std::endl;
+
+    EXPECT_EQ(expected.Kind(), actual.Kind());
+    EXPECT_EQ(expected.Literal(), actual.Literal());
   }
 }

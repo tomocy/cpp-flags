@@ -1,5 +1,6 @@
 #include "src/analysis.h"
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -16,24 +17,48 @@ namespace flags::analysis {
 Lexer::Lexer(const std::vector<char>& src) noexcept : src(src), index(0) {}
 
 Token Lexer::ReadToken() noexcept {
-  auto curr = CurrentChar();
+  SkipWhitespaces();
 
-  if (curr == kCharEOF) {
+  if (DoHave(kCharEOF)) {
     return ComposeSingleTokenAs(TokenKind::END_OF_FILE);
+  }
+
+  if (DoHaveShortFlag()) {
+    return ComposeSingleTokenAs(TokenKind::SHORT_FLAG);
+  }
+
+  if (DoHaveLongFlag()) {
+    return ComposeDualTokenAs(TokenKind::LONG_FLAG);
   }
 
   return ComposeSingleTokenAs(TokenKind::UNKNOWN);
 }
 
-Token Lexer::ComposeSingleTokenAs(TokenKind kind) {
+Token Lexer::ComposeSingleTokenAs(TokenKind kind) noexcept {
   if (kind == TokenKind::END_OF_FILE) {
+    ReadChar();
     return kTokenEOF;
+  }
+
+  if (kind == TokenKind::SHORT_FLAG) {
+    ReadChar();
+    return kTokenShortFlag;
   }
 
   return ComposeTokenAs(1, kind);
 }
 
-Token Lexer::ComposeTokenAs(int n, TokenKind kind) {
+Token Lexer::ComposeDualTokenAs(TokenKind kind) noexcept {
+  if (kind == TokenKind::LONG_FLAG) {
+    ReadChar();
+    ReadChar();
+    return kTokenLongFlag;
+  }
+
+  return ComposeTokenAs(2, kind);
+}
+
+Token Lexer::ComposeTokenAs(int n, TokenKind kind) noexcept {
   auto literal = std::string{""};
   for (auto i = 0; i < n; ++i) {
     literal += std::string{CurrentChar()};
@@ -43,13 +68,27 @@ Token Lexer::ComposeTokenAs(int n, TokenKind kind) {
   return Token(kind, literal);
 }
 
-void Lexer::ReadChar() noexcept {
-  if (index >= src.size()) {
-    return;
+void Lexer::SkipWhitespaces() noexcept {
+  while (DoHaveWhitespace()) {
+    ReadChar();
   }
-
-  ++index;
 }
+
+bool Lexer::DoHaveWhitespace() const noexcept {
+  return DoHave(' ') || DoHave('\t');
+}
+
+bool Lexer::DoHaveShortFlag() const noexcept {
+  return DoHave('-') && !WillHave('-');
+}
+
+bool Lexer::DoHaveLongFlag() const noexcept {
+  return DoHave('-') && WillHave('-');
+}
+
+bool Lexer::DoHave(char c) const noexcept { return CurrentChar() == c; }
+
+bool Lexer::WillHave(char c) const noexcept { return NextChar() == c; }
 
 char Lexer::CurrentChar() const noexcept {
   if (index >= src.size()) {
@@ -57,5 +96,23 @@ char Lexer::CurrentChar() const noexcept {
   }
 
   return src.at(index);
+}
+
+char Lexer::NextChar() const noexcept {
+  auto next = index + 1;
+
+  if (next >= src.size()) {
+    return kCharEOF;
+  }
+
+  return src.at(next);
+}
+
+void Lexer::ReadChar() noexcept {
+  if (index >= src.size()) {
+    return;
+  }
+
+  ++index;
 }
 }  // namespace flags::analysis
