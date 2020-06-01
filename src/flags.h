@@ -43,6 +43,7 @@ class Flag {
 
  private:
   const std::string& ValidateName(const std::string& name) const;
+  value_t ValidateValue(value_t&& value) const;
   const std::string& ValidateDescription(const std::string& description) const;
 
   std::string name;

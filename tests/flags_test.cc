@@ -10,3 +10,9 @@ TEST(FlagUsage, Usage) {
   EXPECT_EQ("--name string  the description of the name (default: \"value\")",
             flag.Usage());
 }
+
+TEST(Flag, InvalidArgs) {
+  EXPECT_THROW(flags::Flag("", std::make_unique<flags::String>("value")),
+               flags::Exception);
+  EXPECT_THROW(flags::Flag("name", nullptr), flags::Exception);
+}

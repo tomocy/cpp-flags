@@ -25,7 +25,7 @@ Flag::Flag(const std::string& name, value_t value)
 Flag::Flag(const std::string& name, value_t value,
            const std::string& description)
     : name(ValidateName(name)),
-      value(std::move(value)),
+      value(ValidateValue(std::move(value))),
       description(ValidateDescription(description)) {}
 
 std::string Flag::Usage() const noexcept {
@@ -39,6 +39,14 @@ const std::string& Flag::ValidateName(const std::string& name) const {
   }
 
   return name;
+}
+
+typename Flag::value_t Flag::ValidateValue(value_t&& value) const {
+  if (!value) {
+    throw Exception("value should not be null");
+  }
+
+  return std::move(value);
 }
 
 const std::string& Flag::ValidateDescription(
