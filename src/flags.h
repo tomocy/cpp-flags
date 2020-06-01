@@ -33,6 +33,8 @@ class String : public Value {
 namespace flags {
 class Flag {
  public:
+  Flag(const std::string& name, std::unique_ptr<Value> value);
+
   Flag(const std::string& name, std::unique_ptr<Value> value,
        const std::string& description);
 

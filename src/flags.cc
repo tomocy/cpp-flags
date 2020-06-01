@@ -19,6 +19,9 @@ std::string String::ToString() const noexcept {
 }  // namespace flags
 
 namespace flags {
+Flag::Flag(const std::string& name, std::unique_ptr<Value> value)
+    : Flag(name, std::move(value), "") {}
+
 Flag::Flag(const std::string& name, std::unique_ptr<Value> value,
            const std::string& description)
     : name(ValidateName(name)),
