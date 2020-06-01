@@ -69,6 +69,36 @@ const std::string& Flag::ValidateDescription(
 }  // namespace flags
 
 namespace flags {
+FlagSet::FlagSet(const std::string& name) : name(ValidateName(name)) {}
+
+void FlagSet::AddFlag(Flag&& flag) {
+  if (flags.find(flag.Name()) != flags.end()) {
+    throw Exception("flag \"" + flag.Name() + "\" is already added");
+  }
+
+  flags[flag.Name()] = std::move(flag);
+}
+
+std::string FlagSet::Usage() const noexcept {
+  auto usage = name + "\n";
+
+  for (auto iter = flags.begin(); iter != flags.end(); ++iter) {
+    usage += "  " + iter->second.Usage() + "\n";
+  }
+
+  return usage.erase(usage.size() - 1, 1);
+}
+
+const std::string& FlagSet::ValidateName(const std::string& name) const {
+  if (name.empty()) {
+    throw Exception("name should not be empty");
+  }
+
+  return name;
+}
+}  // namespace flags
+
+namespace flags {
 Exception::Exception(const std::string& msg) noexcept : msg(msg) {}
 
 const std::string& Exception::What() const noexcept { return msg; }

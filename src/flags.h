@@ -1,6 +1,7 @@
 #ifndef TOMOCY_CPP_FLAGS_FLAGS_H
 #define TOMOCY_CPP_FLAGS_FLAGS_H
 
+#include <map>
 #include <memory>
 #include <string>
 
@@ -55,6 +56,23 @@ class Flag {
   std::string name;
   value_t value;
   std::string description;
+};
+}  // namespace flags
+
+namespace flags {
+class FlagSet {
+ public:
+  FlagSet(const std::string& name);
+
+  void AddFlag(Flag&& flag);
+
+  std::string Usage() const noexcept;
+
+ private:
+  const std::string& ValidateName(const std::string& name) const;
+
+  std::string name;
+  std::map<std::string, Flag> flags;
 };
 }  // namespace flags
 
