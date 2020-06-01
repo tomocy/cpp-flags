@@ -28,6 +28,8 @@ class String : public Value {
 
   std::string ToString() const noexcept override;
 
+  const std::string& Value() const noexcept;
+
  private:
   std::string value;
 };
@@ -45,6 +47,8 @@ class Bool : public Value {
   std::string Type() const noexcept override;
 
   std::string ToString() const noexcept override;
+
+  bool Value() const noexcept;
 
  private:
   bool value;
@@ -65,6 +69,9 @@ class Flag {
   std::string Usage() const noexcept;
 
   const std::string& Name() const noexcept;
+
+  template <typename T>
+  T Get() const;
 
  private:
   const std::string& ValidateName(const std::string& name) const;

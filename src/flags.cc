@@ -20,6 +20,8 @@ std::string String::Type() const noexcept { return "string"; }
 std::string String::ToString() const noexcept {
   return std::string("\"") + value + std::string("\"");
 }
+
+const std::string& String::Value() const noexcept { return value; }
 }  // namespace flags
 
 namespace flags {
@@ -47,6 +49,8 @@ std::string Bool::Type() const noexcept { return "bool"; }
 std::string Bool::ToString() const noexcept {
   return (value) ? "true" : "false";
 }
+
+bool Bool::Value() const noexcept { return value; }
 }  // namespace flags
 
 namespace flags {
@@ -72,6 +76,26 @@ std::string Flag::Usage() const noexcept {
 }
 
 const std::string& Flag::Name() const noexcept { return name; }
+
+template <>
+std::string Flag::Get<std::string>() const {
+  auto casted = dynamic_cast<String*>(value.get());
+  if (casted == nullptr) {
+    throw Exception("flag does not have a value which is castable to string");
+  }
+
+  return casted->Value();
+}
+
+template <>
+bool Flag::Get<bool>() const {
+  auto casted = dynamic_cast<Bool*>(value.get());
+  if (casted == nullptr) {
+    throw Exception("flag does not have a value which is castable to bool");
+  }
+
+  return casted->Value();
+}
 
 const std::string& Flag::ValidateName(const std::string& name) const {
   if (name.empty()) {
