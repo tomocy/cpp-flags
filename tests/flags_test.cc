@@ -7,14 +7,15 @@
 TEST(FlagSetUsage, Usage) {
   auto flags = flags::FlagSet("program");
 
-  flags.AddFlag(flags::Flag("c", flags::String::Make("3")));
-  flags.AddFlag(flags::Flag("b", flags::String::Make("2")));
+  flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
+  flags.AddFlag(
+      flags::Flag("b", flags::String::Make("2"), "the description of b"));
   flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
 
   EXPECT_EQ(R"(program
   --a string  (default: "1")
-  --b string  (default: "2")
-  --c string  (default: "3"))",
+  --b string  the description of b (default: "2")
+  --c bool  (default: false))",
             flags.Usage());
 }
 

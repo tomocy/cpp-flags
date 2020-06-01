@@ -34,6 +34,24 @@ class String : public Value {
 }  // namespace flags
 
 namespace flags {
+class Bool : public Value {
+ public:
+  static std::unique_ptr<Bool> Make(bool value) noexcept;
+
+  explicit Bool(bool value) noexcept;
+
+  Value& operator=(const std::string& value) override;
+
+  std::string Type() const noexcept override;
+
+  std::string ToString() const noexcept override;
+
+ private:
+  bool value;
+};
+}  // namespace flags
+
+namespace flags {
 class Flag {
  public:
   using value_t = std::unique_ptr<Value>;

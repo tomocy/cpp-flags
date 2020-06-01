@@ -23,6 +23,33 @@ std::string String::ToString() const noexcept {
 }  // namespace flags
 
 namespace flags {
+std::unique_ptr<Bool> Bool::Make(bool value) noexcept {
+  return std::make_unique<Bool>(value);
+}
+
+Bool::Bool(bool value) noexcept : value(value) {}
+
+Value& Bool::operator=(const std::string& value) {
+  if (value == "true") {
+    this->value = true;
+    return *this;
+  }
+  if (value == "false") {
+    this->value = false;
+    return *this;
+  }
+
+  throw Exception("flag value \"" + value + "\" should be castable to bool");
+}
+
+std::string Bool::Type() const noexcept { return "bool"; }
+
+std::string Bool::ToString() const noexcept {
+  return (value) ? "true" : "false";
+}
+}  // namespace flags
+
+namespace flags {
 Flag::Flag(const std::string& name, value_t value)
     : Flag(name, std::move(value), "") {}
 
