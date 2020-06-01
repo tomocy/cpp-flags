@@ -11,8 +11,11 @@ TEST(LexerReadToken, ReadToken) {
 
   auto src = std::string("-a --b");
   auto expected = std::vector<Token>{
-      kTokenShortFlag, Token(TokenKind::STRING, "a"),
-      kTokenLongFlag,  Token(TokenKind::STRING, "b"),
+      kTokenShortFlag,
+      Token(TokenKind::STRING, "a"),
+      Token(TokenKind::WHITESPACE, " "),
+      kTokenLongFlag,
+      Token(TokenKind::STRING, "b"),
       kTokenEOF,
   };
 

@@ -5,7 +5,14 @@
 #include <vector>
 
 namespace flags::analysis {
-enum class TokenKind { END_OF_FILE, UNKNOWN, SHORT_FLAG, LONG_FLAG, STRING };
+enum class TokenKind {
+  END_OF_FILE,
+  UNKNOWN,
+  WHITESPACE,
+  SHORT_FLAG,
+  LONG_FLAG,
+  STRING
+};
 }
 
 namespace flags::analysis {
@@ -39,8 +46,6 @@ class Lexer {
   Token ReadToken() noexcept;
 
  private:
-  void SkipWhitespaces() noexcept;
-
   Token ComposeSingleTokenAs(TokenKind kind) noexcept;
 
   Token ComposeDualTokenAs(TokenKind kind) noexcept;

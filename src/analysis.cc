@@ -17,10 +17,12 @@ namespace flags::analysis {
 Lexer::Lexer(const std::vector<char>& src) noexcept : src(src), index(0) {}
 
 Token Lexer::ReadToken() noexcept {
-  SkipWhitespaces();
-
   if (DoHave(kCharEOF)) {
     return ComposeSingleTokenAs(TokenKind::END_OF_FILE);
+  }
+
+  if (DoHaveWhitespace()) {
+    return ComposeSingleTokenAs(TokenKind::WHITESPACE);
   }
 
   if (DoHaveShortFlag()) {
@@ -85,12 +87,6 @@ std::string Lexer::ReadLetters() noexcept {
   }
 
   return std::string(std::begin(src) + begin, std::begin(src) + index);
-}
-
-void Lexer::SkipWhitespaces() noexcept {
-  while (DoHaveWhitespace()) {
-    ReadChar();
-  }
 }
 
 bool Lexer::DoHaveWhitespace() const noexcept {
