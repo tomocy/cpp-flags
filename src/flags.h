@@ -17,6 +17,8 @@ class Value {
 namespace flags {
 class String : public Value {
  public:
+  static std::unique_ptr<String> Make(const std::string& value) noexcept;
+
   explicit String(const std::string& value) noexcept;
 
   Value& operator=(const std::string& value) noexcept override;

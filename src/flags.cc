@@ -4,6 +4,10 @@
 #include <string>
 
 namespace flags {
+std::unique_ptr<String> String::Make(const std::string& value) noexcept {
+  return std::make_unique<String>(value);
+}
+
 String::String(const std::string& value) noexcept : value(value) {}
 
 Value& String::operator=(const std::string& value) noexcept {
