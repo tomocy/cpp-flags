@@ -11,6 +11,7 @@ enum class TokenKind {
   WHITESPACE,
   SHORT_FLAG,
   LONG_FLAG,
+  EQUAL,
   STRING
 };
 }
@@ -34,6 +35,7 @@ namespace flags::analysis {
 const Token kTokenEOF = Token(TokenKind::END_OF_FILE, "\x00");
 const Token kTokenShortFlag = Token(TokenKind::SHORT_FLAG, "-");
 const Token kTokenLongFlag = Token(TokenKind::LONG_FLAG, "--");
+const Token kTokenEqual = Token(TokenKind::EQUAL, "=");
 
 const char kCharEOF = 0;
 }  // namespace flags::analysis

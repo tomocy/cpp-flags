@@ -1,6 +1,5 @@
 #include "src/analysis.h"
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -33,6 +32,10 @@ Token Lexer::ReadToken() noexcept {
     return ComposeDualTokenAs(TokenKind::LONG_FLAG);
   }
 
+  if (DoHave('=')) {
+    return ComposeSingleTokenAs(TokenKind::EQUAL);
+  }
+
   if (DoHaveLetter()) {
     return ComposeString();
   }
@@ -49,6 +52,11 @@ Token Lexer::ComposeSingleTokenAs(TokenKind kind) noexcept {
   if (kind == TokenKind::SHORT_FLAG) {
     ReadChar();
     return kTokenShortFlag;
+  }
+
+  if (kind == TokenKind::EQUAL) {
+    ReadChar();
+    return kTokenEqual;
   }
 
   return ComposeTokenAs(1, kind);

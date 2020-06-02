@@ -1,6 +1,5 @@
 #include "src/analysis.h"
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -9,13 +8,15 @@
 TEST(LexerReadToken, ReadToken) {
   using namespace flags::analysis;
 
-  auto src = std::string("-a --b");
+  auto src = std::string("-a --bb=ccc");
   auto expected = std::vector<Token>{
       kTokenShortFlag,
       Token(TokenKind::STRING, "a"),
       Token(TokenKind::WHITESPACE, " "),
       kTokenLongFlag,
-      Token(TokenKind::STRING, "b"),
+      Token(TokenKind::STRING, "bb"),
+      kTokenEqual,
+      Token(TokenKind::STRING, "ccc"),
       kTokenEOF,
   };
 
@@ -23,8 +24,6 @@ TEST(LexerReadToken, ReadToken) {
 
   for (auto expected : expected) {
     auto actual = lex.ReadToken();
-
-    std::cout << actual.Literal() << std::endl;
 
     EXPECT_EQ(expected.Kind(), actual.Kind());
     EXPECT_EQ(expected.Literal(), actual.Literal());
