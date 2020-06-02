@@ -8,7 +8,7 @@
 TEST(LexerReadToken, ReadToken) {
   using namespace flags::analysis;
 
-  auto src = std::string("-a --bb=ccc");
+  auto src = std::string("-a --bb=ccc x -y z");
   auto expected = std::vector<Token>{
       kTokenShortFlag,
       Token(TokenKind::STRING, "a"),
@@ -17,6 +17,13 @@ TEST(LexerReadToken, ReadToken) {
       Token(TokenKind::STRING, "bb"),
       kTokenEqual,
       Token(TokenKind::STRING, "ccc"),
+      Token(TokenKind::WHITESPACE, " "),
+      Token(TokenKind::STRING, "x"),
+      Token(TokenKind::WHITESPACE, " "),
+      kTokenShortFlag,
+      Token(TokenKind::STRING, "y"),
+      Token(TokenKind::WHITESPACE, " "),
+      Token(TokenKind::STRING, "z"),
       kTokenEOF,
   };
 
