@@ -4,6 +4,9 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
+
+#include "src/analysis.h"
 
 namespace flags {
 class Value {
@@ -70,6 +73,8 @@ class Flag {
 
   const std::string& Name() const noexcept;
 
+  void SetValue(const std::string& value);
+
   template <typename T>
   T Get() const;
 
@@ -85,6 +90,10 @@ class Flag {
 }  // namespace flags
 
 namespace flags {
+bool IsBoolFlag(const Flag& flag) noexcept;
+}  // namespace flags
+
+namespace flags {
 class FlagSet {
  public:
   FlagSet(const std::string& name);
@@ -93,6 +102,10 @@ class FlagSet {
 
   const Flag& GetFlag(const std::string& name) const;
 
+  void Parse(const std::vector<std::string>& args);
+
+  void Parse(const std::string& args);
+
   std::string Usage() const noexcept;
 
  private:
@@ -100,6 +113,36 @@ class FlagSet {
 
   std::string name;
   std::map<std::string, Flag> flags;
+};
+}  // namespace flags
+
+namespace flags {
+using namespace analysis;
+class Parser {
+ public:
+  Parser(const std::vector<char>& src,
+         std::map<std::string, Flag>& flags) noexcept;
+
+  Parser(const Lexer& lexer, std::map<std::string, Flag>& flags) noexcept;
+
+  void Parse();
+
+ private:
+  void ParseFlag();
+
+  void ParseWhitespace() noexcept;
+
+  bool DoHave(TokenKind kind) const noexcept;
+
+  std::string ReadString();
+
+  void ReadToken() noexcept;
+
+  Lexer lexer;
+  Token curr_token;
+  Token next_token;
+
+  std::map<std::string, Flag>& flags;
 };
 }  // namespace flags
 

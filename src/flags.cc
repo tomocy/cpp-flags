@@ -1,7 +1,14 @@
 #include "src/flags.h"
 
+#include <cassert>
+#include <iostream>
+#include <iterator>
 #include <memory>
+#include <sstream>
 #include <string>
+#include <vector>
+
+#include "src/analysis.h"
 
 namespace flags {
 std::unique_ptr<String> String::Make(const std::string& value) noexcept {
@@ -77,6 +84,8 @@ std::string Flag::Usage() const noexcept {
 
 const std::string& Flag::Name() const noexcept { return name; }
 
+void Flag::SetValue(const std::string& value) { (*this->value) = value; }
+
 template <>
 std::string Flag::Get<std::string>() const {
   auto casted = dynamic_cast<String*>(value.get());
@@ -120,6 +129,17 @@ const std::string& Flag::ValidateDescription(
 }  // namespace flags
 
 namespace flags {
+bool IsBoolFlag(const Flag& flag) noexcept {
+  try {
+    flag.Get<bool>();
+    return true;
+  } catch (const Exception&) {
+    return false;
+  }
+}
+}  // namespace flags
+
+namespace flags {
 FlagSet::FlagSet(const std::string& name) : name(ValidateName(name)) {}
 
 void FlagSet::AddFlag(Flag&& flag) {
@@ -138,6 +158,24 @@ const Flag& FlagSet::GetFlag(const std::string& name) const {
   return flags.at(name);
 }
 
+void FlagSet::Parse(const std::vector<std::string>& args) {
+  std::ostringstream joined;
+  std::copy(std::begin(args), std::end(args),
+            std::ostream_iterator<std::string>(joined, " "));
+
+  auto src = joined.str();
+  src = src.erase(src.size() - 1, 1);
+
+  Parse(src);
+}
+
+void FlagSet::Parse(const std::string& args) {
+  auto parser =
+      Parser(std::vector<char>(std::begin(args), std::end(args)), flags);
+
+  parser.Parse();
+}
+
 std::string FlagSet::Usage() const noexcept {
   auto usage = name + "\n";
 
@@ -154,6 +192,93 @@ const std::string& FlagSet::ValidateName(const std::string& name) const {
   }
 
   return name;
+}
+}  // namespace flags
+
+namespace flags {
+Parser::Parser(const std::vector<char>& src,
+               std::map<std::string, Flag>& flags) noexcept
+    : Parser(Lexer(src), flags) {}
+
+Parser::Parser(const Lexer& lexer, std::map<std::string, Flag>& flags) noexcept
+    : lexer(lexer), curr_token(kTokenEOF), next_token(kTokenEOF), flags(flags) {
+  ReadToken();
+  ReadToken();
+}
+
+void Parser::Parse() {
+  while (true) {
+    switch (curr_token.Kind()) {
+      case TokenKind::END_OF_FILE:
+        return;
+      case TokenKind::SHORT_FLAG:
+      case TokenKind::LONG_FLAG:
+        ParseFlag();
+        ParseWhitespace();
+        break;
+      case TokenKind::STRING:
+        return;
+      default:
+        throw Exception("token \"" + curr_token.Literal() + "\" is unknown");
+    }
+  }
+}
+
+void Parser::ParseFlag() {
+  assert(DoHave(TokenKind::SHORT_FLAG) || DoHave(TokenKind::LONG_FLAG));
+
+  ReadToken();
+
+  if (!DoHave(TokenKind::STRING)) {
+    throw Exception("the name of flag should be provided");
+  }
+  auto name = ReadString();
+
+  if (flags.find(name) == flags.end()) {
+    throw Exception("unknown flag \"" + name + "\" is provided");
+  }
+  auto& flag = flags.at(name);
+
+  if (IsBoolFlag(flag)) {
+    flag.SetValue("true");
+    return;
+  }
+
+  if (!DoHave(TokenKind::WHITESPACE) && !DoHave(TokenKind::EQUAL)) {
+    throw Exception("the value of flag \"" + name + "\" should be provided");
+  }
+  ReadToken();
+
+  auto value = ReadString();
+
+  flag.SetValue(value);
+}
+
+void Parser::ParseWhitespace() noexcept {
+  if (!DoHave(TokenKind::WHITESPACE)) {
+    return;
+  }
+
+  ReadToken();
+}
+
+bool Parser::DoHave(TokenKind kind) const noexcept {
+  return curr_token.Kind() == kind;
+}
+
+std::string Parser::ReadString() {
+  assert(DoHave(TokenKind::STRING));
+
+  auto literal = curr_token.Literal();
+
+  ReadToken();
+
+  return literal;
+}
+
+void Parser::ReadToken() noexcept {
+  curr_token = next_token;
+  next_token = lexer.ReadToken();
 }
 }  // namespace flags
 

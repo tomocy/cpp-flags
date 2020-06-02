@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
@@ -42,6 +43,33 @@ TEST(FlagSetFlag, FlagIsNotAdded) {
   EXPECT_THROW(flags.GetFlag("a").Get<std::string>(), flags::Exception);
 }
 
+TEST(FlagSetParse, ValueIsGiven) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
+  flags.AddFlag(
+      flags::Flag("b", flags::String::Make("2"), "the description of b"));
+  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+
+  auto args = std::vector<std::string>{"--a", "22", "--c", "--b=333"};
+
+  flags.Parse(args);
+
+  EXPECT_EQ("22", flags.GetFlag("a").Get<std::string>());
+  EXPECT_EQ("333", flags.GetFlag("b").Get<std::string>());
+  EXPECT_TRUE(flags.GetFlag("c").Get<bool>());
+}
+
+TEST(FlagSetParse, ValueIsNotGiven) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+
+  auto args = std::vector<std::string>{"--a"};
+
+  EXPECT_THROW(flags.Parse(args), flags::Exception);
+}
+
 TEST(FlagUsage, DescriptionIsSpecified) {
   auto flag = flags::Flag("name", flags::String::Make("value"),
                           "the description of the name");
@@ -72,6 +100,8 @@ TEST(FlagCast, Uncastable) {
 }
 
 TEST(Flag, InvalidArgs) {
+  EXPECT_THROW(flags::Flag("", flags::String::Make("value")), flags::Exception);
+  EXPECT_THROW(flags::Flag("name", nullptr), flags::Exception);
   EXPECT_THROW(flags::Flag("", flags::String::Make("value")), flags::Exception);
   EXPECT_THROW(flags::Flag("name", nullptr), flags::Exception);
 }
