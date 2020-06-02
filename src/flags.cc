@@ -39,7 +39,7 @@ const std::string& Flag::Name() const noexcept { return name; }
 void Flag::SetValue(const std::string& value) { (*this->value) = value; }
 
 template <>
-std::tuple<std::string, bool> Flag::TryToGet<std::string>() const {
+std::tuple<std::string, bool> Flag::TryToGet<std::string>() const noexcept {
   auto casted = dynamic_cast<String*>(value.get());
   if (casted == nullptr) {
     return {"", false};
@@ -59,7 +59,7 @@ std::string Flag::Get<std::string>() const {
 }
 
 template <>
-std::tuple<int, bool> Flag::TryToGet<int>() const {
+std::tuple<int, bool> Flag::TryToGet<int>() const noexcept {
   auto casted = dynamic_cast<Int*>(value.get());
   if (casted == nullptr) {
     return {0, false};
@@ -79,7 +79,7 @@ int Flag::Get<int>() const {
 }
 
 template <>
-std::tuple<bool, bool> Flag::TryToGet<bool>() const {
+std::tuple<bool, bool> Flag::TryToGet<bool>() const noexcept {
   auto casted = dynamic_cast<Bool*>(value.get());
   if (casted == nullptr) {
     return {false, false};

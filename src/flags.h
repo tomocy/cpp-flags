@@ -29,7 +29,7 @@ class Flag {
   void SetValue(const std::string& value);
 
   template <typename T>
-  std::tuple<T, bool> TryToGet() const;
+  std::tuple<T, bool> TryToGet() const noexcept;
 
   template <typename T>
   T Get() const;
