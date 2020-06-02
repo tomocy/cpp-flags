@@ -33,6 +33,33 @@ const std::string& String::Value() const noexcept { return value; }
 }  // namespace flags
 
 namespace flags {
+std::unique_ptr<Int> Int::Make(int value) noexcept {
+  return std::make_unique<Int>(value);
+}
+
+Int::Int(int value) noexcept : value(value) {}
+
+Value& Int::operator=(const std::string& value) {
+  try {
+    this->value = std::stoi(value);
+    return *this;
+  } catch (const std::invalid_argument& e) {
+    throw Exception("flag value \"" + value +
+                    "\" should be castable to int: " + e.what());
+  } catch (const std::out_of_range& e) {
+    throw Exception("flag value \"" + value +
+                    "\" should be castable to int: " + e.what());
+  }
+}
+
+std::string Int::Type() const noexcept { return "int"; }
+
+std::string Int::ToString() const noexcept { return std::to_string(value); }
+
+int Int::Value() const noexcept { return value; }
+}  // namespace flags
+
+namespace flags {
 std::unique_ptr<Bool> Bool::Make(bool value) noexcept {
   return std::make_unique<Bool>(value);
 }
@@ -102,6 +129,26 @@ std::string Flag::Get<std::string>() const {
   auto [value, ok] = TryToGet<std::string>();
   if (!ok) {
     throw Exception("flag does not have a value which is castable to string");
+  }
+
+  return value;
+}
+
+template <>
+std::tuple<int, bool> Flag::TryToGet<int>() const {
+  auto casted = dynamic_cast<Int*>(value.get());
+  if (casted == nullptr) {
+    return {0, false};
+  }
+
+  return {casted->Value(), true};
+}
+
+template <>
+int Flag::Get<int>() const {
+  auto [value, ok] = TryToGet<int>();
+  if (!ok) {
+    throw Exception("flag does not have a value which is castable to int");
   }
 
   return value;

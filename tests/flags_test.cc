@@ -12,10 +12,10 @@ TEST(FlagSetUsage, Success) {
   flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
   flags.AddFlag(
       flags::Flag("b", flags::String::Make("2"), "the description of b"));
-  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+  flags.AddFlag(flags::Flag("a", flags::Int::Make(1)));
 
   EXPECT_EQ(R"(program
-  --a string  (default: "1")
+  --a int  (default: 1)
   --b string  the description of b (default: "2")
   --c bool  (default: false))",
             flags.Usage());
@@ -101,12 +101,18 @@ TEST(FlagCast, Success) {
       flags::Flag("a", flags::String::Make("1")).Get<std::string>());
   EXPECT_EQ(flags::Flag("a", flags::String::Make("1")).Get<std::string>(), "1");
 
+  EXPECT_NO_THROW(flags::Flag("a", flags::Int::Make(1)).Get<int>());
+  EXPECT_EQ(flags::Flag("a", flags::Int::Make(1)).Get<int>(), 1);
+
   EXPECT_NO_THROW(flags::Flag("a", flags::Bool::Make(false)).Get<bool>());
   EXPECT_FALSE(flags::Flag("a", flags::Bool::Make(false)).Get<bool>());
 }
 
 TEST(FlagCast, Uncastable) {
   EXPECT_THROW(flags::Flag("a", flags::Bool::Make(true)).Get<std::string>(),
+               flags::Exception);
+
+  EXPECT_THROW(flags::Flag("a", flags::Bool::Make(true)).Get<int>(),
                flags::Exception);
 
   EXPECT_THROW(flags::Flag("a", flags::String::Make("a")).Get<bool>(),
