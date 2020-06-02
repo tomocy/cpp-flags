@@ -64,6 +64,19 @@ TEST(FlagSetParse, Success) {
   EXPECT_EQ(expected_args, flags.Args());
 }
 
+TEST(FlagSetParse, EmptySource) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
+  flags.AddFlag(
+      flags::Flag("b", flags::String::Make("2"), "the description of b"));
+  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+
+  auto args = std::vector<std::string>{};
+
+  EXPECT_NO_THROW(flags.Parse(args));
+}
+
 TEST(FlagSetParse, ValueIsNotGiven) {
   auto flags = flags::FlagSet("program");
 

@@ -158,7 +158,10 @@ void FlagSet::Parse(const std::vector<std::string>& args) {
             std::ostream_iterator<std::string>(joined, " "));
 
   auto src = joined.str();
-  src = src.erase(src.size() - 1, 1);
+
+  if (!src.empty()) {
+    src = src.erase(src.size() - 1, 1);
+  }
 
   Parse(src);
 }
