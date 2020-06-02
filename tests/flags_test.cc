@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
-#include "src/exceptions.h"
 
 TEST(FlagSetUsage, Success) {
   auto flags = flags::FlagSet("program");

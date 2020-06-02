@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "src/analysis.h"
+#include "src/exceptions.h"
 
 namespace flags {
 class Value {
