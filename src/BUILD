@@ -10,6 +10,16 @@ cc_library(
     deps = [
         "//src:analysis",
         "//src:exceptions",
+        "//src:values",
+    ],
+)
+
+cc_library(
+    name = "values",
+    srcs = ["values.cc"],
+    hdrs = ["values.h"],
+    deps = [
+        "//src:exceptions",
     ],
 )
 
