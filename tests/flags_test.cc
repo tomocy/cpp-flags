@@ -6,7 +6,7 @@
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
-TEST(FlagSetUsage, Usage) {
+TEST(FlagSetUsage, Success) {
   auto flags = flags::FlagSet("program");
 
   flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
@@ -29,7 +29,7 @@ TEST(FlagSetAddFlag, FlagIsAlreadyAdded) {
                flags::Exception);
 }
 
-TEST(FlagSetFlag, FlagIsAdded) {
+TEST(FlagSetFlag, Success) {
   auto flags = flags::FlagSet("program");
 
   flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
@@ -43,7 +43,7 @@ TEST(FlagSetFlag, FlagIsNotAdded) {
   EXPECT_THROW(flags.GetFlag("a").Get<std::string>(), flags::Exception);
 }
 
-TEST(FlagSetParse, ValueIsGiven) {
+TEST(FlagSetParse, Success) {
   auto flags = flags::FlagSet("program");
 
   flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
@@ -80,7 +80,7 @@ TEST(FlagSetParse, UnknownFlag) {
   EXPECT_THROW(flags.Parse(args), flags::Exception);
 }
 
-TEST(FlagUsage, DescriptionIsSpecified) {
+TEST(FlagUsage, Success) {
   auto flag = flags::Flag("name", flags::String::Make("value"),
                           "the description of the name");
   EXPECT_EQ("--name string  the description of the name (default: \"value\")",
@@ -92,7 +92,7 @@ TEST(FlagUsage, DescriptionIsNotSpecified) {
   EXPECT_EQ("--name string  (default: \"value\")", flag.Usage());
 }
 
-TEST(FlagCast, Castable) {
+TEST(FlagCast, Success) {
   EXPECT_NO_THROW(
       flags::Flag("a", flags::String::Make("1")).Get<std::string>());
   EXPECT_EQ(flags::Flag("a", flags::String::Make("1")).Get<std::string>(), "1");

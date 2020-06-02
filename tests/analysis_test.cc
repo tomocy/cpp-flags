@@ -5,7 +5,7 @@
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
-TEST(LexerReadToken, ReadToken) {
+TEST(LexerReadToken, Success) {
   using namespace flags::analysis;
 
   auto src = std::string("-a --bb=ccc x -y z");
