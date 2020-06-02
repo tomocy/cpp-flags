@@ -5,8 +5,7 @@ cc_library(
     srcs = ["flags.cc"],
     hdrs = ["flags.h"],
     visibility = [
-        "//example:__pkg__",
-        "//tests:__pkg__",
+        "//visibility:public",
     ],
     deps = [
         "//src:analysis",

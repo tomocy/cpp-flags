@@ -27,9 +27,6 @@ int main(int n, const char** args) {
   flags.AddFlag(
       flags::Flag("admin", flags::Bool::Make(false), "add a user as admin"));
 
-  // FlagSet generates its usage based on the added flags.
-  std::cout << flags.Usage() << std::endl;
-
   // The program name should be trimmed.
   auto trimmed = std::vector<std::string>(args + 1, args + n);
 
@@ -37,6 +34,9 @@ int main(int n, const char** args) {
   try {
     flags.Parse(trimmed);
   } catch (const flags::Exception& e) {
+    // FlagSet generates its usage based on the added flags.
+    std::cout << flags.Usage() << std::endl;
+
     std::cerr << e.What() << std::endl;
     return EXIT_FAILURE;
   }
