@@ -106,6 +106,8 @@ class FlagSet {
 
   const Flag& GetFlag(const std::string& name) const;
 
+  const std::vector<std::string>& Args() const noexcept;
+
   void Parse(const std::vector<std::string>& args);
 
   void Parse(const std::string& args);
@@ -117,6 +119,7 @@ class FlagSet {
 
   std::string name;
   std::map<std::string, Flag> flags;
+  std::vector<std::string> args;
 };
 }  // namespace flags
 
@@ -124,19 +127,24 @@ namespace flags {
 using namespace analysis;
 class Parser {
  public:
-  Parser(const std::vector<char>& src,
-         std::map<std::string, Flag>& flags) noexcept;
+  Parser(const std::vector<char>& src, std::map<std::string, Flag>& flags,
+         std::vector<std::string>& args) noexcept;
 
-  Parser(const Lexer& lexer, std::map<std::string, Flag>& flags) noexcept;
+  Parser(const Lexer& lexer, std::map<std::string, Flag>& flags,
+         std::vector<std::string>& args) noexcept;
 
   void Parse();
 
  private:
   void ParseFlag();
 
+  void ParseArgs() noexcept;
+
   void ParseWhitespace() noexcept;
 
   bool DoHave(TokenKind kind) const noexcept;
+
+  std::string ReadArg() noexcept;
 
   std::string ReadString();
 
@@ -147,6 +155,7 @@ class Parser {
   Token next_token;
 
   std::map<std::string, Flag>& flags;
+  std::vector<std::string>& args;
 };
 }  // namespace flags
 

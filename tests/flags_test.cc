@@ -51,13 +51,17 @@ TEST(FlagSetParse, Success) {
       flags::Flag("b", flags::String::Make("2"), "the description of b"));
   flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
 
-  auto args = std::vector<std::string>{"--a", "22", "--c", "--b=333"};
+  auto args = std::vector<std::string>{"--a", "22", "--c",   "--b=333",
+                                       "x",   "-y", "01234", "--z=56789"};
 
   flags.Parse(args);
 
   EXPECT_EQ("22", flags.GetFlag("a").Get<std::string>());
   EXPECT_EQ("333", flags.GetFlag("b").Get<std::string>());
   EXPECT_TRUE(flags.GetFlag("c").Get<bool>());
+  auto expected_args =
+      std::vector<std::string>{"x", "-y", "01234", "--z=56789"};
+  EXPECT_EQ(expected_args, flags.Args());
 }
 
 TEST(FlagSetParse, ValueIsNotGiven) {

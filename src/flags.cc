@@ -179,6 +179,8 @@ const Flag& FlagSet::GetFlag(const std::string& name) const {
   return flags.at(name);
 }
 
+const std::vector<std::string>& FlagSet::Args() const noexcept { return args; }
+
 void FlagSet::Parse(const std::vector<std::string>& args) {
   std::ostringstream joined;
   std::copy(std::begin(args), std::end(args),
@@ -191,8 +193,8 @@ void FlagSet::Parse(const std::vector<std::string>& args) {
 }
 
 void FlagSet::Parse(const std::string& args) {
-  auto parser =
-      Parser(std::vector<char>(std::begin(args), std::end(args)), flags);
+  auto parser = Parser(std::vector<char>(std::begin(args), std::end(args)),
+                       flags, this->args);
 
   parser.Parse();
 }
@@ -217,12 +219,17 @@ const std::string& FlagSet::ValidateName(const std::string& name) const {
 }  // namespace flags
 
 namespace flags {
-Parser::Parser(const std::vector<char>& src,
-               std::map<std::string, Flag>& flags) noexcept
-    : Parser(Lexer(src), flags) {}
+Parser::Parser(const std::vector<char>& src, std::map<std::string, Flag>& flags,
+               std::vector<std::string>& args) noexcept
+    : Parser(Lexer(src), flags, args) {}
 
-Parser::Parser(const Lexer& lexer, std::map<std::string, Flag>& flags) noexcept
-    : lexer(lexer), curr_token(kTokenEOF), next_token(kTokenEOF), flags(flags) {
+Parser::Parser(const Lexer& lexer, std::map<std::string, Flag>& flags,
+               std::vector<std::string>& args) noexcept
+    : lexer(lexer),
+      curr_token(kTokenEOF),
+      next_token(kTokenEOF),
+      flags(flags),
+      args(args) {
   ReadToken();
   ReadToken();
 }
@@ -238,6 +245,7 @@ void Parser::Parse() {
         ParseWhitespace();
         break;
       case TokenKind::STRING:
+        ParseArgs();
         return;
       default:
         throw Exception("token \"" + curr_token.Literal() + "\" is unknown");
@@ -275,6 +283,15 @@ void Parser::ParseFlag() {
   flag.SetValue(value);
 }
 
+void Parser::ParseArgs() noexcept {
+  while (!DoHave(TokenKind::END_OF_FILE)) {
+    ParseWhitespace();
+    auto arg = ReadArg();
+    std::cout << arg << std::endl;
+    args.push_back(arg);
+  }
+}
+
 void Parser::ParseWhitespace() noexcept {
   if (!DoHave(TokenKind::WHITESPACE)) {
     return;
@@ -285,6 +302,16 @@ void Parser::ParseWhitespace() noexcept {
 
 bool Parser::DoHave(TokenKind kind) const noexcept {
   return curr_token.Kind() == kind;
+}
+
+std::string Parser::ReadArg() noexcept {
+  auto arg = std::string("");
+  while (!DoHave(TokenKind::WHITESPACE) && !DoHave(TokenKind::END_OF_FILE)) {
+    arg += curr_token.Literal();
+    ReadToken();
+  }
+
+  return arg;
 }
 
 std::string Parser::ReadString() {
