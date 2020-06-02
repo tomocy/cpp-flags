@@ -70,6 +70,16 @@ TEST(FlagSetParse, ValueIsNotGiven) {
   EXPECT_THROW(flags.Parse(args), flags::Exception);
 }
 
+TEST(FlagSetParse, UnknownFlag) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+
+  auto args = std::vector<std::string>{"--b"};
+
+  EXPECT_THROW(flags.Parse(args), flags::Exception);
+}
+
 TEST(FlagUsage, DescriptionIsSpecified) {
   auto flag = flags::Flag("name", flags::String::Make("value"),
                           "the description of the name");
