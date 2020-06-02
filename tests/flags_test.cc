@@ -1,6 +1,7 @@
 #include "src/flags.h"
 
 #include <memory>
+#include <string>
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
@@ -25,6 +26,20 @@ TEST(FlagSetAddFlag, FlagIsAlreadyAdded) {
   EXPECT_NO_THROW(flags.AddFlag(flags::Flag("a", flags::String::Make("1"))));
   EXPECT_THROW(flags.AddFlag(flags::Flag("a", flags::String::Make("1"))),
                flags::Exception);
+}
+
+TEST(FlagSetFlag, FlagIsAdded) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("a", flags::String::Make("1")));
+
+  EXPECT_EQ("1", flags.GetFlag("a").Get<std::string>());
+}
+
+TEST(FlagSetFlag, FlagIsNotAdded) {
+  auto flags = flags::FlagSet("program");
+
+  EXPECT_THROW(flags.GetFlag("a").Get<std::string>(), flags::Exception);
 }
 
 TEST(FlagUsage, DescriptionIsSpecified) {

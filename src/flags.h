@@ -91,6 +91,8 @@ class FlagSet {
 
   void AddFlag(Flag&& flag);
 
+  const Flag& GetFlag(const std::string& name) const;
+
   std::string Usage() const noexcept;
 
  private:

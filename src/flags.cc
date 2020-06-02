@@ -130,6 +130,14 @@ void FlagSet::AddFlag(Flag&& flag) {
   flags[flag.Name()] = std::move(flag);
 }
 
+const Flag& FlagSet::GetFlag(const std::string& name) const {
+  if (flags.find(name) == flags.end()) {
+    throw Exception("flag \"" + name + "\" is not added");
+  }
+
+  return flags.at(name);
+}
+
 std::string FlagSet::Usage() const noexcept {
   auto usage = name + "\n";
 
