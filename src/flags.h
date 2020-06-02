@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "src/analysis.h"
@@ -74,6 +75,9 @@ class Flag {
   const std::string& Name() const noexcept;
 
   void SetValue(const std::string& value);
+
+  template <typename T>
+  std::tuple<T, bool> TryToGet() const;
 
   template <typename T>
   T Get() const;

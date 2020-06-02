@@ -6,6 +6,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "src/analysis.h"
@@ -87,23 +88,43 @@ const std::string& Flag::Name() const noexcept { return name; }
 void Flag::SetValue(const std::string& value) { (*this->value) = value; }
 
 template <>
-std::string Flag::Get<std::string>() const {
+std::tuple<std::string, bool> Flag::TryToGet<std::string>() const {
   auto casted = dynamic_cast<String*>(value.get());
   if (casted == nullptr) {
+    return {"", false};
+  }
+
+  return {casted->Value(), true};
+}
+
+template <>
+std::string Flag::Get<std::string>() const {
+  auto [value, ok] = TryToGet<std::string>();
+  if (!ok) {
     throw Exception("flag does not have a value which is castable to string");
   }
 
-  return casted->Value();
+  return value;
+}
+
+template <>
+std::tuple<bool, bool> Flag::TryToGet<bool>() const {
+  auto casted = dynamic_cast<Bool*>(value.get());
+  if (casted == nullptr) {
+    return {false, false};
+  }
+
+  return {casted->Value(), true};
 }
 
 template <>
 bool Flag::Get<bool>() const {
-  auto casted = dynamic_cast<Bool*>(value.get());
-  if (casted == nullptr) {
+  auto [value, ok] = TryToGet<bool>();
+  if (!ok) {
     throw Exception("flag does not have a value which is castable to bool");
   }
 
-  return casted->Value();
+  return value;
 }
 
 const std::string& Flag::ValidateName(const std::string& name) const {
