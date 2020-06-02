@@ -179,16 +179,4 @@ class Parser {
 };
 }  // namespace flags
 
-namespace flags {
-class Exception {
- public:
-  explicit Exception(const std::string& msg) noexcept;
-
-  const std::string& What() const noexcept;
-
- private:
-  std::string msg;
-};
-}  // namespace flags
-
 #endif

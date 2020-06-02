@@ -9,6 +9,16 @@ cc_library(
     ],
     deps = [
         "//src:analysis",
+        "//src:exceptions",
+    ],
+)
+
+cc_library(
+    name = "exceptions",
+    srcs = ["exceptions.cc"],
+    hdrs = ["exceptions.h"],
+    visibility = [
+        "//tests:__pkg__",
     ],
 )
 

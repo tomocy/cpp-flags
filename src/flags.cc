@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "src/analysis.h"
+#include "src/exceptions.h"
 
 namespace flags {
 std::unique_ptr<String> String::Make(const std::string& value) noexcept {
@@ -375,10 +376,4 @@ void Parser::ReadToken() noexcept {
   curr_token = next_token;
   next_token = lexer.ReadToken();
 }
-}  // namespace flags
-
-namespace flags {
-Exception::Exception(const std::string& msg) noexcept : msg(msg) {}
-
-const std::string& Exception::What() const noexcept { return msg; }
 }  // namespace flags
