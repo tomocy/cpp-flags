@@ -236,13 +236,14 @@ Parser::Parser(const Lexer& lexer, std::map<std::string, Flag>& flags,
 
 void Parser::Parse() {
   while (true) {
+    SkipWhitespaces();
+
     switch (curr_token.Kind()) {
       case TokenKind::END_OF_FILE:
         return;
       case TokenKind::SHORT_FLAG:
       case TokenKind::LONG_FLAG:
         ParseFlag();
-        ParseWhitespace();
         break;
       case TokenKind::STRING:
         ParseArgs();
@@ -285,19 +286,18 @@ void Parser::ParseFlag() {
 
 void Parser::ParseArgs() noexcept {
   while (!DoHave(TokenKind::END_OF_FILE)) {
-    ParseWhitespace();
+    SkipWhitespaces();
+
     auto arg = ReadArg();
     std::cout << arg << std::endl;
     args.push_back(arg);
   }
 }
 
-void Parser::ParseWhitespace() noexcept {
-  if (!DoHave(TokenKind::WHITESPACE)) {
-    return;
+void Parser::SkipWhitespaces() noexcept {
+  while (DoHave(TokenKind::WHITESPACE)) {
+    ReadToken();
   }
-
-  ReadToken();
 }
 
 bool Parser::DoHave(TokenKind kind) const noexcept {

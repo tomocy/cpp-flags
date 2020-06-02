@@ -140,7 +140,7 @@ class Parser {
 
   void ParseArgs() noexcept;
 
-  void ParseWhitespace() noexcept;
+  void SkipWhitespaces() noexcept;
 
   bool DoHave(TokenKind kind) const noexcept;
 
