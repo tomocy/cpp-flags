@@ -1,4 +1,4 @@
-#include "src/analysis.h"
+#include "src/flags/analysis/analysis.h"
 
 #include <string>
 #include <vector>

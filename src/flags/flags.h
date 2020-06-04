@@ -1,5 +1,5 @@
-#ifndef TOMOCY_CPP_FLAGS_FLAGS_H
-#define TOMOCY_CPP_FLAGS_FLAGS_H
+#ifndef TOMOCY_CPP_FLAGS_FLAGS_FLAGS_H
+#define TOMOCY_CPP_FLAGS_FLAGS_FLAGS_H
 
 #include <map>
 #include <memory>
@@ -7,9 +7,9 @@
 #include <tuple>
 #include <vector>
 
-#include "src/analysis.h"
-#include "src/exceptions.h"
-#include "src/values.h"
+#include "src/flags/analysis/analysis.h"
+#include "src/flags/exceptions.h"
+#include "src/flags/values.h"
 
 namespace flags {
 class Flag {

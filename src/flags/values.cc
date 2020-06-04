@@ -1,9 +1,9 @@
-#include "src/values.h"
+#include "src/flags/values.h"
 
 #include <memory>
 #include <string>
 
-#include "src/exceptions.h"
+#include "src/flags/exceptions.h"
 
 namespace flags {
 std::unique_ptr<String> String::Make(const std::string& value) noexcept {

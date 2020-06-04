@@ -1,4 +1,4 @@
-#include "src/flags.h"
+#include "src/flags/flags.h"
 
 #include <cassert>
 #include <iostream>
@@ -9,8 +9,8 @@
 #include <tuple>
 #include <vector>
 
-#include "src/analysis.h"
-#include "src/exceptions.h"
+#include "src/flags/analysis/analysis.h"
+#include "src/flags/exceptions.h"
 
 namespace flags {
 Flag::Flag(const std::string& name, value_t value)
@@ -263,7 +263,7 @@ void Parser::ParseArgs() noexcept {
     SkipWhitespaces();
 
     auto arg = ReadArg();
-    std::cout << arg << std::endl;
+
     args.push_back(arg);
   }
 }

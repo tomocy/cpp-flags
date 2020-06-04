@@ -1,5 +1,5 @@
-#ifndef TOMOCY_CPP_FLAGS_VALUES_H
-#define TOMOCY_CPP_FLAGS_VALUES_H
+#ifndef TOMOCY_CPP_FLAGS_FLAGS_VALUES_H
+#define TOMOCY_CPP_FLAGS_FLAGS_VALUES_H
 
 #include <memory>
 #include <string>
