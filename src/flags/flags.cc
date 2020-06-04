@@ -194,6 +194,8 @@ std::string FlagSet::Usage(const usage_generator_t& generator) const noexcept {
   return generator(name, flags);
 }
 
+size_t FlagSet::FlagSize() const noexcept { return flags.size(); }
+
 const std::string& FlagSet::ValidateName(const std::string& name) const {
   if (name.empty()) {
     throw Exception("name should not be empty");

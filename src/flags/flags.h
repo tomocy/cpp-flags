@@ -77,6 +77,8 @@ class FlagSet {
 
   std::string Usage(const usage_generator_t& generator) const noexcept;
 
+  size_t FlagSize() const noexcept;
+
  private:
   const std::string& ValidateName(const std::string& name) const;
 

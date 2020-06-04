@@ -6,21 +6,6 @@
 
 #include "external/gtest/googletest/include/gtest/gtest.h"
 
-TEST(FlagSetUsage, Success) {
-  auto flags = flags::FlagSet("program");
-
-  flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
-  flags.AddFlag(
-      flags::Flag("b", flags::String::Make("2"), "the description of b"));
-  flags.AddFlag(flags::Flag("a", flags::Int::Make(1)));
-
-  EXPECT_EQ(R"(program
-  --a int  (default: 1)
-  --b string  the description of b (default: "2")
-  --c bool  (default: false))",
-            flags.Usage());
-}
-
 TEST(FlagSetAddFlag, FlagIsAlreadyAdded) {
   auto flags = flags::FlagSet("program");
 
@@ -95,6 +80,31 @@ TEST(FlagSetParse, UnknownFlag) {
   auto args = std::vector<std::string>{"--b"};
 
   EXPECT_THROW(flags.Parse(args), flags::Exception);
+}
+
+TEST(FlagSetUsage, Success) {
+  auto flags = flags::FlagSet("program");
+
+  flags.AddFlag(flags::Flag("c", flags::Bool::Make(false)));
+  flags.AddFlag(
+      flags::Flag("b", flags::String::Make("2"), "the description of b"));
+  flags.AddFlag(flags::Flag("a", flags::Int::Make(1)));
+
+  EXPECT_EQ(R"(program
+  --a int  (default: 1)
+  --b string  the description of b (default: "2")
+  --c bool  (default: false))",
+            flags.Usage());
+}
+
+TEST(FlagSetFlagSize, Success) {
+  auto flags = flags::FlagSet("program");
+
+  EXPECT_EQ(0, flags.FlagSize());
+
+  flags.AddFlag(flags::Flag("a", flags::Bool::Make(false)));
+
+  EXPECT_EQ(1, flags.FlagSize());
 }
 
 TEST(FlagUsage, Success) {
