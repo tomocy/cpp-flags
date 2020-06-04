@@ -8,9 +8,9 @@ cc_library(
         "//visibility:public",
     ],
     deps = [
-        "//src:analysis",
-        "//src:exceptions",
-        "//src:values",
+        "//src/flags:exceptions",
+        "//src/flags:values",
+        "//src/flags/analysis",
     ],
 )
 
@@ -19,7 +19,7 @@ cc_library(
     srcs = ["values.cc"],
     hdrs = ["values.h"],
     deps = [
-        "//src:exceptions",
+        "//src/flags:exceptions",
     ],
 )
 
@@ -27,15 +27,6 @@ cc_library(
     name = "exceptions",
     srcs = ["exceptions.cc"],
     hdrs = ["exceptions.h"],
-    visibility = [
-        "//tests:__pkg__",
-    ],
-)
-
-cc_library(
-    name = "analysis",
-    srcs = ["analysis.cc"],
-    hdrs = ["analysis.h"],
     visibility = [
         "//tests:__pkg__",
     ],

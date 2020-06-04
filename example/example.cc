@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "src/flags.h"
+#include "src/flags/flags.h"
 
 int main(int n, const char** args) {
   auto flags = flags::FlagSet("program");

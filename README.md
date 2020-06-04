@@ -12,7 +12,7 @@ A library implements command-line flag parsing.
 #include <string>
 #include <vector>
 
-#include "external/flags/src/flags.h"
+#include "external/flags/src/flags/flags.h"
 
 int main(int n, const char** args) {
   auto flags = flags::FlagSet("program");
@@ -67,7 +67,7 @@ Add the following code to your `WORKSPACE` file.
 ```python
 http_archive(
     name = "flags",
-    sha256 = "236be26dd0a0455c8c408315865f777ea3e6fe339edaca4e29769e513d47b2dd",
+    sha256 = "357a7802484e783c61a3421a42f42dbc507e2a578f972acf0ad4705611ae395c",
     strip_prefix = "cpp-flags-1.0",
     url = "https://github.com/tomocy/cpp-flags/archive/v1.0.zip",
 )
@@ -78,14 +78,14 @@ http_archive(
 Include `flags.h` as below.
 
 ```cpp
-#include "external/flags/src/flags.h"
+#include "external/flags/src/flags/flags.h"
 ```
 
 Add `flags` library to `deps` in your target in your `BUILD` file.
 
 ```python
 deps = [
-  "@flags//src:flags",
+  "@flags//src/flags",
 ],
 ```
 
