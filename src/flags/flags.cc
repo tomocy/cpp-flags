@@ -132,6 +132,19 @@ bool IsBoolFlag(const Flag& flag) noexcept {
 }  // namespace flags
 
 namespace flags {
+std::string GenerateDefaultFlagSetUsage(
+    const std::string& name, const std::map<std::string, Flag>& flags) {
+  auto usage = name + "\n";
+
+  for (auto iter = std::begin(flags); iter != std::end(flags); ++iter) {
+    usage += "  " + iter->second.Usage() + "\n";
+  }
+
+  return usage.erase(usage.size() - 1, 1);
+}
+}  // namespace flags
+
+namespace flags {
 FlagSet::FlagSet(const std::string& name) : name(ValidateName(name)) {}
 
 void FlagSet::AddFlag(Flag&& flag) {
@@ -174,13 +187,11 @@ void FlagSet::Parse(const std::string& args) {
 }
 
 std::string FlagSet::Usage() const noexcept {
-  auto usage = name + "\n";
+  return Usage(GenerateDefaultFlagSetUsage);
+}
 
-  for (auto iter = flags.begin(); iter != flags.end(); ++iter) {
-    usage += "  " + iter->second.Usage() + "\n";
-  }
-
-  return usage.erase(usage.size() - 1, 1);
+std::string FlagSet::Usage(const usage_generator_t& generator) const noexcept {
+  return generator(name, flags);
 }
 
 const std::string& FlagSet::ValidateName(const std::string& name) const {
