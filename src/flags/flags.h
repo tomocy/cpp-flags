@@ -79,6 +79,8 @@ class FlagSet {
 
   size_t FlagSize() const noexcept;
 
+  size_t ArgSize() const noexcept;
+
  private:
   const std::string& ValidateName(const std::string& name) const;
 

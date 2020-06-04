@@ -107,6 +107,16 @@ TEST(FlagSetFlagSize, Success) {
   EXPECT_EQ(1, flags.FlagSize());
 }
 
+TEST(FlagSetArgSize, Success) {
+  auto flags = flags::FlagSet("program");
+
+  EXPECT_EQ(0, flags.ArgSize());
+
+  flags.Parse("a b c");
+
+  EXPECT_EQ(3, flags.ArgSize());
+}
+
 TEST(FlagUsage, Success) {
   auto flag = flags::Flag("name", flags::String::Make("value"),
                           "the description of the name");
