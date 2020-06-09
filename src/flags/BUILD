@@ -10,7 +10,19 @@ cc_library(
     deps = [
         "//src/flags:exceptions",
         "//src/flags:flag",
+        "//src/flags:parser",
         "//src/flags:values",
+        "//src/flags/analysis",
+    ],
+)
+
+cc_library(
+    name = "parser",
+    srcs = ["parser.cc"],
+    hdrs = ["parser.h"],
+    deps = [
+        "//src/flags:exceptions",
+        "//src/flags:flag",
         "//src/flags/analysis",
     ],
 )
