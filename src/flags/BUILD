@@ -9,8 +9,19 @@ cc_library(
     ],
     deps = [
         "//src/flags:exceptions",
+        "//src/flags:flag",
         "//src/flags:values",
         "//src/flags/analysis",
+    ],
+)
+
+cc_library(
+    name = "flag",
+    srcs = ["flag.cc"],
+    hdrs = ["flag.h"],
+    deps = [
+        "//src/flags:exceptions",
+        "//src/flags:values",
     ],
 )
 
