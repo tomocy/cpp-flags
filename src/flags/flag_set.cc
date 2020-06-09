@@ -1,6 +1,5 @@
-#include "src/flags/flags.h"
+#include "src/flags/flag_set.h"
 
-#include <iostream>
 #include <iterator>
 #include <memory>
 #include <sstream>
@@ -8,7 +7,6 @@
 #include <tuple>
 #include <vector>
 
-#include "src/flags/analysis/analysis.h"
 #include "src/flags/exceptions.h"
 #include "src/flags/flag.h"
 #include "src/flags/parser.h"

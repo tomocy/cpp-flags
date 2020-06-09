@@ -2,7 +2,6 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 
 cc_library(
     name = "flags",
-    srcs = ["flags.cc"],
     hdrs = ["flags.h"],
     visibility = [
         "//visibility:public",
@@ -10,9 +9,21 @@ cc_library(
     deps = [
         "//src/flags:exceptions",
         "//src/flags:flag",
+        "//src/flags:flag_set",
         "//src/flags:parser",
         "//src/flags:values",
         "//src/flags/analysis",
+    ],
+)
+
+cc_library(
+    name = "flag_set",
+    srcs = ["flag_set.cc"],
+    hdrs = ["flag_set.h"],
+    deps = [
+        "//src/flags:exceptions",
+        "//src/flags:flag",
+        "//src/flags:parser",
     ],
 )
 
