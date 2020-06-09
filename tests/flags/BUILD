@@ -8,3 +8,12 @@ cc_test(
         "@gtest//:gtest_main",
     ],
 )
+
+cc_test(
+    name = "flag",
+    srcs = ["flag_test.cc"],
+    deps = [
+        "//src/flags",
+        "@gtest//:gtest_main",
+    ],
+)
